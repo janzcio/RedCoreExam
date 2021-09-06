@@ -1,36 +1,34 @@
 <template>
     <div>
-        <h4 class="text-center">All Books</h4><br/>
+        <h4 class="text-center">All Role</h4><br/>
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Author</th>
-                <th>Created At</th>
-                <th>Updated At</th>
+                <th>Description</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="book in books" :key="book.id">
-                <td>{{ book.id }}</td>
-                <td>{{ book.name }}</td>
-                <td>{{ book.author }}</td>
-                <td>{{ book.created_at }}</td>
-                <td>{{ book.updated_at }}</td>
+            <tr v-for="role in roles" :key="role.id">
+                <td>{{ role.id }}</td>
+                <td>{{ role.name }}</td>
+                <td>{{ role.description }}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <router-link :to="{name: 'editbook', params: { id: book.id }}" class="btn btn-primary">Edit
+                        <router-link :to="{name: 'role-edit', params: { id: role.id }}" class="btn btn-primary">Edit
                         </router-link>
-                        <button class="btn btn-danger" @click="deleteBook(book.id)">Delete</button>
+                        <router-link :to="{name: 'role-show', params: { id: role.id }}" class="btn btn-success">Show
+                        </router-link>
+                        <button class="btn btn-danger" @click="deleteRole(role.id)">Delete</button>
                     </div>
                 </td>
             </tr>
             </tbody>
         </table>
 
-        <button type="button" class="btn btn-info" @click="this.$router.push('/books/add')">Add Book</button>
+        <button type="button" class="btn btn-info" @click="this.$router.push('/roles/create')">Add role</button>
     </div>
 </template>
 
@@ -38,14 +36,15 @@
 export default {
     data() {
         return {
-            books: []
+            roles: []
         }
     },
     created() {
         this.$axios.get('/sanctum/csrf-cookie').then(response => {
-            this.$axios.get('/api/books')
+            this.$axios.get('/api/roles')
                 .then(response => {
-                    this.books = response.data;
+                    console.log(response.data, "response.data");
+                    this.roles = response.data;
                 })
                 .catch(function (error) {
                     console.error(error);
@@ -53,12 +52,12 @@ export default {
         })
     },
     methods: {
-        deleteBook(id) {
+        deleteRole(id) {
             this.$axios.get('/sanctum/csrf-cookie').then(response => {
-                this.$axios.delete(`/api/books/delete/${id}`)
+                this.$axios.delete(`/api/roles/delete/${id}`)
                     .then(response => {
-                        let i = this.books.map(item => item.id).indexOf(id); // find index of your object
-                        this.books.splice(i, 1)
+                        let i = this.roles.map(item => item.id).indexOf(id); // find index of your object
+                        this.roles.splice(i, 1)
                     })
                     .catch(function (error) {
                         console.error(error);

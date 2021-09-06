@@ -1,18 +1,18 @@
 <template>
     <div>
-        <h4 class="text-center">Edit Book</h4>
+        <h4 class="text-center">Edit Role</h4>
         <div class="row">
             <div class="col-md-6">
-                <form @submit.prevent="updateBook">
+                <form @submit.prevent="updateRole">
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" v-model="book.name">
+                        <input type="text" class="form-control" v-model="role.name">
                     </div>
                     <div class="form-group">
-                        <label>Author</label>
-                        <input type="text" class="form-control" v-model="book.author">
+                        <label>Description</label>
+                        <input type="text" class="form-control" v-model="role.description">
                     </div>
-                    <button type="submit" class="btn btn-primary">Update Book</button>
+                    <button type="submit" class="btn btn-primary">Update role</button>
                 </form>
             </div>
         </div>
@@ -23,14 +23,15 @@
 export default {
     data() {
         return {
-            book: {}
+            role: {}
         }
     },
     created() {
         this.$axios.get('/sanctum/csrf-cookie').then(response => {
-            this.$axios.get(`/api/books/edit/${this.$route.params.id}`)
+            this.$axios.get(`/api/roles/edit/${this.$route.params.id}`)
                 .then(response => {
-                    this.book = response.data;
+                    console.log(response.data, "response.data");
+                    this.role = response.data;
                 })
                 .catch(function (error) {
                     console.error(error);
@@ -38,11 +39,11 @@ export default {
         })
     },
     methods: {
-        updateBook() {
+        updateRole() {
             this.$axios.get('/sanctum/csrf-cookie').then(response => {
-                this.$axios.post(`/api/books/update/${this.$route.params.id}`, this.book)
+                this.$axios.post(`/api/roles/update/${this.$route.params.id}`, this.role)
                     .then(response => {
-                        this.$router.push({name: 'books'});
+                        this.$router.push({name: 'roles'});
                     })
                     .catch(function (error) {
                         console.error(error);

@@ -1,17 +1,31 @@
 <?php
-
-use App\Http\Controllers\API\BookController;
-use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('login', [UserController::class, 'login']);
-Route::post('register', [UserController::class, 'register']);
-Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::group(['prefix' => 'books', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('/', [BookController::class, 'index']);
-    Route::post('add', [BookController::class, 'add']);
-    Route::get('edit/{id}', [BookController::class, 'edit']);
-    Route::post('update/{id}', [BookController::class, 'update']);
-    Route::delete('delete/{id}', [BookController::class, 'delete']);
+
+
+Route::namespace('API')->group(function() {
+
+    Route::post('login', 'UserController@login');
+    Route::post('register', 'UserController@register');
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::post('logout', 'UserController@logout');
+
+        Route::group(['prefix' => 'users'], function () {
+            Route::get('/', 'UserController@index');
+            Route::post('add', 'UserController@add');
+            Route::get('edit/{id}', 'UserController@edit');
+            Route::post('update/{id}', 'UserController@update');
+            Route::delete('delete/{id}', 'UserController@delete');
+        });
+
+        Route::group(['prefix' => 'roles'], function () {
+            Route::get('/', 'RoleController@index');
+            Route::post('add', 'RoleController@add');
+            Route::get('edit/{id}', 'RoleController@edit');
+            Route::post('update/{id}', 'RoleController@update');
+            Route::delete('delete/{id}', 'RoleController@delete');
+        });
+    });
 });
