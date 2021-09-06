@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Models\User;
+use App\Services\Auth\LoginUser;
+use App\Services\Auth\LogoutUser;
 use App\Services\Users\CreateUser;
 use App\Services\Users\DeleteUser;
 use App\Services\Users\GetAllUsers;
@@ -85,54 +87,18 @@ class UserController extends Controller
     /**
      * Login
      */
-    public function login(UserLoginRequest $request, GetUserByEmail $getUserByEmail)
+    public function login(UserLoginRequest $request, GetUserByEmail $getUserByEmail, LoginUser $loginUser)
     {
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
-        $user = null;
-        if (Auth::attempt($credentials)) {
-            
-            $user = $getUserByEmail->execute($request->email);
-            $success = true;
-            $message = 'User login successfully';
-        } else {
-            $success = false;
-            $message = 'Unauthorized';
-        }
-
-        // response
-        $response = [
-            'success' => $success,
-            'message' => $message,
-            'user_details' => !is_null($user) ? [
-                "full_name" => $user->full_name,
-                "email" => $user->email
-            ] : [],
-        ];
+        $response = $loginUser->execute($request);
         return response()->json($response);
     }
 
     /**
      * Logout
      */
-    public function logout()
+    public function logout(LogoutUser $logoutUser)
     {
-        try {
-            Session::flush();
-            $success = true;
-            $message = 'Successfully logged out';
-        } catch (\Illuminate\Database\QueryException $ex) {
-            $success = false;
-            $message = $ex->getMessage();
-        }
-
-        // response
-        $response = [
-            'success' => $success,
-            'message' => $message,
-        ];
+        $response = $logoutUser->execute();
         return response()->json($response);
     }
 }
