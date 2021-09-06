@@ -13,6 +13,7 @@ class CreateRole
      */
     public function execute($param)
     {
-        return Role::create($param);
+
+        return Role::create(array_merge($param, ["guard_name" => "users"]));
     }
 }

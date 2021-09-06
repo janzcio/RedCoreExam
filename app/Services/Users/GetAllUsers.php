@@ -12,7 +12,7 @@ class GetAllUsers
      */
     public function execute()
     {
-        $users = User::all()->toArray();
+        $users = User::with('roles')->get()->toArray();
         return array_reverse($users);
     }
 }

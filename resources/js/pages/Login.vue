@@ -2,9 +2,8 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-
-                <div class="alert alert-danger" role="alert" v-if="error !== null">
-                    {{ error }}
+                <div class="alert alert-danger" role="alert" v-if="errors" v-for="item in errors">
+                    {{ item }}
                 </div>
 
                 <div class="card card-default">
@@ -48,12 +47,14 @@ export default {
         return {
             email: "",
             password: "",
-            error: null
+            error: null,
+            errors: [],
         }
     },
     methods: {
         handleSubmit(e) {
             e.preventDefault()
+            let vm = this;
             if (this.password.length > 0) {
                 this.$axios.get('/sanctum/csrf-cookie').then(response => {
                     this.$axios.post('api/login', {
@@ -69,9 +70,22 @@ export default {
                             }
                         })
                         .catch(function (error) {
-                            console.error(error);
+                            if (error.response.data) {
+                                vm.generateError(error.response.data);    
+                            }
+                            
+                            // console.log(error.response.data, "error.response.data");
                         });
                 })
+            }
+            
+        },
+        generateError(data){
+            var errs = data.errors;
+            this.errors = [];
+            for (let key in data.errors) {
+              let value = errs[key];
+              this.errors.push(value[0])
             }
         }
     },

@@ -17,6 +17,12 @@ class UpdateUser
         $user = User::find($id);
         $data = $req->all();
         $data["password"] = bcrypt($data["password"]);
-        $user->update($data);
+        if ($user->update($data)) {
+            if (isset($data["role"])) {
+                $user->syncRoles((int)$data["role"]);
+            }
+        }
+
+        return $user;
     }
 }

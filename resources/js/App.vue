@@ -8,16 +8,14 @@
             <div class="collapse navbar-collapse">
                 <!-- for logged-in user-->
                 <div class="navbar-nav" v-if="isLoggedIn">
-                    <router-link to="/dashboard" class="nav-item nav-link">Dashboard</router-link>
-                    <router-link to="/users" class="nav-item nav-link">Users</router-link>
-                    <router-link to="/roles" class="nav-item nav-link">Roles</router-link>
+                    <router-link to="/dashboard" class="nav-item nav-link" v-bind:class="{ active: currentRouteName === 'dashboard' }">Dashboard</router-link>
+                    <router-link to="/users" class="nav-item nav-link" v-bind:class="{ active: currentRouteName === 'users' }">Users</router-link>
+                    <router-link to="/roles" class="nav-item nav-link" v-bind:class="{ active: currentRouteName === 'roles' }">Roles</router-link>
                     <a class="nav-item nav-link" style="cursor: pointer;" @click="logout">Logout {{ '(' + user.full_name + ')' }}</a>
                 </div>
                 <!-- for non-logged user-->
                 <div class="navbar-nav" v-else>
-                    <router-link to="/login" class="nav-item nav-link">login</router-link>
-                    <router-link to="/register" class="nav-item nav-link">Register
-                    </router-link>
+                    <router-link to="/login" class="nav-item nav-link active">login</router-link>
                 </div>
             </div>
         </nav>
@@ -38,6 +36,11 @@ export default {
     created() {
         if (window.Laravel.isLoggedin) {
             this.isLoggedIn = true
+        }
+    },
+    computed: {
+        currentRouteName() {
+            return this.$route.name;
         }
     },
     methods: {

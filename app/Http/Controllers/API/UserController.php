@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UserLoginRequest;
 use App\Models\User;
 use App\Services\Users\CreateUser;
 use App\Services\Users\DeleteUser;
@@ -24,7 +26,7 @@ class UserController extends Controller
     }
 
     // add User
-    public function add(Request $request, CreateUser $createUser)
+    public function add(StoreUserRequest $request, CreateUser $createUser)
     {
         $response = $createUser->execute($request->all());
 
@@ -39,7 +41,7 @@ class UserController extends Controller
     }
 
     // update User
-    public function update($id, Request $request, UpdateUser $updateUser)
+    public function update($id, StoreUserRequest $request, UpdateUser $updateUser)
     {
         $response = $updateUser->execute($id, $request);
 
@@ -83,7 +85,7 @@ class UserController extends Controller
     /**
      * Login
      */
-    public function login(Request $request, GetUserByEmail $getUserByEmail)
+    public function login(UserLoginRequest $request, GetUserByEmail $getUserByEmail)
     {
         $credentials = [
             'email' => $request->email,

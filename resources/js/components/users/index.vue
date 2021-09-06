@@ -7,6 +7,7 @@
                 <th>ID</th>
                 <th>Full Name</th>
                 <th>Email</th>
+                <th>Role</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -15,6 +16,11 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.full_name }}</td>
                 <td>{{ user.email }}</td>
+                <td>
+                    <span class="badge badge-primary" v-if="user.roles" v-for="role in user.roles">
+                        {{role.name}}
+                    </span>
+                </td>
                 <td>
                     <div class="btn-group" role="group">
                         <router-link :to="{name: 'user-edit', params: { id: user.id }}" class="btn btn-primary">Edit
