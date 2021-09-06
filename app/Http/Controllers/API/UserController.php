@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\Users\CreateUser;
 use App\Services\Users\DeleteUser;
 use App\Services\Users\GetAllUsers;
+use App\Services\Users\GetUserByEmail;
 use App\Services\Users\GetUserById;
 use App\Services\Users\UpdateUser;
 use Illuminate\Http\Request;
@@ -82,25 +83,31 @@ class UserController extends Controller
     /**
      * Login
      */
-    public function login(Request $request)
+    public function login(Request $request, GetUserByEmail $getUserByEmail)
     {
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
         ];
-
+        $user = null;
         if (Auth::attempt($credentials)) {
+            
+            $user = $getUserByEmail->execute($request->email);
             $success = true;
             $message = 'User login successfully';
         } else {
             $success = false;
-            $message = 'Unauthorised';
+            $message = 'Unauthorized';
         }
 
         // response
         $response = [
             'success' => $success,
             'message' => $message,
+            'user_details' => !is_null($user) ? [
+                "full_name" => $user->full_name,
+                "email" => $user->email
+            ] : [],
         ];
         return response()->json($response);
     }

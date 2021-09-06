@@ -19506,7 +19506,8 @@ __webpack_require__.r(__webpack_exports__);
   name: "App",
   data: function data() {
     return {
-      isLoggedIn: false
+      isLoggedIn: false,
+      user: window.Laravel.user !== '' ? window.Laravel.user : ''
     };
   },
   created: function created() {
@@ -19986,7 +19987,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     if (window.Laravel.user) {
-      this.name = window.Laravel.user.name;
+      this.name = window.Laravel.user.full_name;
     }
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
@@ -20054,7 +20055,7 @@ __webpack_require__.r(__webpack_exports__);
             email: _this.email,
             password: _this.password
           }).then(function (response) {
-            console.log(response.data);
+            console.log(response.data, "boom");
 
             if (response.data.success) {
               _this.$router.go('/dashboard');
@@ -20235,7 +20236,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.logout && $options.logout.apply($options, arguments);
     })
-  }, "Logout")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+  }, "Logout " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)('(' + $data.user.full_name + ')'), 1
+  /* TEXT */
+  )])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 1
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" for non-logged user"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
     to: "/login",
