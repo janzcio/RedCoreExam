@@ -44,6 +44,7 @@ class LoginUser
                 "full_name" => $user->full_name,
                 "email" => $user->email
             ] : [],
+            'token' => $user->createToken('my-app-token')->plainTextToken
         ];
         return $response;
     }
